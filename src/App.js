@@ -3,13 +3,12 @@ import Axios from "axios";
 import { Container, Row, Col, Form, Card } from "react-bootstrap";
 function App() {
   const [CityDetail, setCityDetail] = useState();
-  const [hdFlag, setHdEnabled] = useState();
-  const [oneWayFlag, setOneWayEnabled] = useState();
+  const [hdFlag, setHdEnabled] = useState(false);
+  const [oneWayFlag, setOneWayEnabled] = useState(false);
   const [searchText, setSearchText] = useState("");
 
 
   useEffect(() => {
-    console.log(searchText);
     const url = "https://api.zoomcar.com/v4/cities?platform=web";
     Axios.get(url).then(function (response) {
       console.log("response------>", response);
@@ -23,8 +22,11 @@ function App() {
         return city;
       });
       CityDetail = CityDetail.filter(el => {return el.hd_enabled === hdFlag && el.one_way_enabled === oneWayFlag && el.name.includes(searchText)})
+      if(CityDetail!==undefined && CityDetail!=="") {
+        CityDetail = CityDetail.filter(el => {return el.name.includes(searchText)});
+      }
       setCityDetail(CityDetail);
-      console.log("to SHow===",CityDetail);
+      console.log("to SHow===",CityDetail,searchText);
     });
   }, [hdFlag,oneWayFlag,searchText]);
   return (
