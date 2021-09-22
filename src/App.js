@@ -5,7 +5,7 @@ function App() {
   const [CityDetail, setCityDetail] = useState();
   const [hdFlag, setHdEnabled] = useState();
   const [oneWayFlag, setOneWayEnabled] = useState();
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState("");
 
 
   useEffect(() => {
