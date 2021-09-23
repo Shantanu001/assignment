@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { Container, Row, Col, Form, Card } from "react-bootstrap";
+import useDebounce from "./debounce.js";
+
 function App() {
   const [CityDetail, setCityDetail] = useState();
   const [hdFlag, setHdEnabled] = useState(false);
   const [oneWayFlag, setOneWayEnabled] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const debouncedSearchTerm = useDebounce(searchText,500);
 
-
+  
   useEffect(() => {
-    const url = "https://api.zoomcar.com/v4/cities?platform=web";
+    const url = process.env.REACT_APP_LIST_URL;
+    console.log(url);
     Axios.get(url).then(function (response) {
-      console.log("response------>", response);
       let CityDetail = response.data.cities.map((el) => {
         let city = {};
         city.name = el.name;
@@ -22,13 +25,12 @@ function App() {
         return city;
       });
       CityDetail = CityDetail.filter(el => {return el.hd_enabled === hdFlag && el.one_way_enabled === oneWayFlag && el.name.includes(searchText)})
-      if(CityDetail!==undefined && CityDetail!=="") {
-        CityDetail = CityDetail.filter(el => {return el.name.includes(searchText)});
+      if(debouncedSearchTerm) {
+        CityDetail = CityDetail.filter(el => {return el.name.includes(debouncedSearchTerm)});
       }
       setCityDetail(CityDetail);
-      console.log("to SHow===",CityDetail,searchText);
     });
-  }, [hdFlag,oneWayFlag,searchText]);
+  }, [hdFlag,oneWayFlag,debouncedSearchTerm]);
   return (
     <div className="App">
       <Container fluid>
@@ -48,7 +50,7 @@ function App() {
             </Form>
           </Row>
           <Row className="cities">
-                {CityDetail &&
+                {CityDetail&&CityDetail.length > 0?
                   CityDetail.map((city) => (
                     <Col sm={4}>
                       <Card className="card" >
@@ -58,7 +60,7 @@ function App() {
                         </Card.Body>
                       </Card>
                     </Col>
-                  ))}
+                  )):<h1 className="notFound">No City found :(</h1>}
           </Row>
       </Container>
     </div>

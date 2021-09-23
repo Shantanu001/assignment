@@ -35,4 +35,14 @@
   padding: 50px;
   margin: 50px;
   background-color: #EEEDED;
+  height:50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.notFound{
+  
 }
