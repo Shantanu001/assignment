@@ -12,7 +12,7 @@ function App() {
 
   
   useEffect(() => {
-    const url = process.env.REACT_APP_LIST_URL;
+    const url = process.env.REACT_APP_LISTS_URL;
     console.log(url);
     Axios.get(url).then(function (response) {
       let CityDetail = response.data.cities.map((el) => {
